@@ -1,8 +1,9 @@
 package account;
 
-import java.util.*;
+import java.util.InputMismatchException;
+import java.util.Scanner;
 
-public class Deposit implements InputFunctionable {
+public class Withdrawal implements InputFunctionable {
 
 	@Override
 	public int CollectCheck() {
@@ -20,13 +21,14 @@ public class Deposit implements InputFunctionable {
 
 	@Override
 	public int InputData() {
-
+		
 		System.out.println("-------------------------------------");
-		System.out.print("How much would you like to deposit? : ");
+		System.out.print("How much would you like to Withdrawal? : ");
 		
 		Scanner scan = new Scanner(System.in);
 		int money = scan.nextInt();
 		
 		return money;
 	}
+
 }

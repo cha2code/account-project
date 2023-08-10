@@ -2,30 +2,28 @@ package account;
 
 import java.util.*;
 
-public class CreateAccount extends ValueCheck {
-	
-	CreateAccount(String name, int accountNumber){
-		super();
-	}
+public class CreateAccount {
 	
 	//고객 이름 입력
-	public String CreateCustomer() {
+	protected String NameCustomer() {
+
+		System.out.println("------------------------");
+		System.out.print("Insert your name : ");
 		
-		Scanner input = new Scanner(System.in);
-	
-		System.out.print("Input your name : ");
-		name = input.next();
+		Scanner scan = new Scanner(System.in);
+		String name = scan.next();
 		
 		return name;
-	}
-	
-	//Create account number for customer - 고객 계좌 6자리 랜덤 생성
-	public int CreateAccountNumber() {
 		
-		Random rand = new Random();
-		accountNumber = rand.nextInt(6);
+	}
+
+	//고객 계좌번호 6자리 랜덤 생성
+	protected int AccountCustomer() {
+		
+		int accountNumber = 0;
+		
+		accountNumber = (int)(Math.random() * 899999) + 100000;
 		
 		return accountNumber;
 	}
-
 }
