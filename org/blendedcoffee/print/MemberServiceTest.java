@@ -2,10 +2,11 @@ package org.blendedcoffee.print;
 
 import org.blendedcoffee.cli.Input;
 import org.blendedcoffee.cli.MemberService;
-import org.blendedcoffee.vo.Member;
 
-public class MemberServiceTest {
-
+public class MemberServiceTest {	
+	
+	static MemberService ms = new MemberService();
+	
 	public static void main(String[] args) {
 		
 		selectMenu();
@@ -16,31 +17,57 @@ public class MemberServiceTest {
 		
 		while(true) {
 			
-			System.out.println("-------------------- Select the menu --------------------");		
+			System.out.println("---------------------- Select the menu ----------------------");		
 			String select = Input.read("1.Join  2.Check your account  3.Deposit  4.Withdrawal  5.Exit : ");
 			
 			switch(select) {
 			
 			case "1" : //계정 생성
-				MemberService ms = new MemberService();
-				Member member = ms.inputMember();
-				System.out.println(member);
+				createInfo();
 				break;
 				
 			case "2" : //계좌 확인
+				printInfo();			
 				break;
 				
 			case "3" : //입금
+				depositInfo();
 				break;
 				
 			case "4" : //출금
+				withdrawalInfo();
 				break;
 				
 			case "5" : //프로그램 종료
-				System.out.println("프로그램 종료");
+				System.out.println("Exit the program.");
 				return;
 				
 			}
 		}		
+	}
+	
+	//case 1 : 사용자가 입력한 ID, Name + 자동 생성 된 계좌 번호 출력 
+	static void createInfo() {
+		ms.joinMember();
+
+	}
+	
+	//case 2 : 입력 된 계좌 정보 출력
+	static void printInfo() {
+		ms.printMember();
+		
+	}
+	
+	//case 3 : 입금
+	static void depositInfo() {
+		
+		ms.deposit();
+		
+	}
+	
+	//case 4 : 출금
+	static void withdrawalInfo() {
+		
+		ms.withdrawal();
 	}
 }
