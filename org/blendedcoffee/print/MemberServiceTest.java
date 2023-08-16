@@ -18,7 +18,7 @@ public class MemberServiceTest {
 		while(true) {
 			
 			System.out.println("---------------------- Select the menu ----------------------");		
-			String select = Input.read("1.Join  2.Check your account  3.Deposit  4.Withdrawal  5.Exit : ");
+			String select = Input.read("1.Join  2.Check your account  3.Deposit  4.Withdrawal  5.Delete your account  6.Exit : ");
 			
 			switch(select) {
 			
@@ -38,7 +38,11 @@ public class MemberServiceTest {
 				withdrawalInfo();
 				break;
 				
-			case "5" : //프로그램 종료
+			case"5" : //계좌 삭제
+				deleteInfo();
+				break;
+				
+			case "6" : //프로그램 종료
 				System.out.println("Exit the program.");
 				return;
 				
@@ -60,14 +64,17 @@ public class MemberServiceTest {
 	
 	//case 3 : 입금
 	static void depositInfo() {
-		
 		ms.deposit();
 		
 	}
 	
 	//case 4 : 출금
 	static void withdrawalInfo() {
-		
 		ms.withdrawal();
+	}
+	
+	//case 5 : 계좌 삭제
+	static void deleteInfo() {
+		ms.delete();
 	}
 }

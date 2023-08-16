@@ -30,26 +30,41 @@ public class MemberService {
 	//리스트에 저장 된 고객 정보 출력
 		public void printMember() {
 			
-			String userid = md.inputUserId();
-			//System.out.println("userid:"+userid);
-
-			Member member = md.findByUserid(userid);
+			int index = md.checkList();
 			
-			System.out.printf("ID : %s\n", member.getUserid());			
-			System.out.printf("Name : %s\n", member.getName());
-			System.out.printf("Account number : %s\n", member.getAccountNumber());
-			System.out.printf("Balance : %s\n", member.getBalance());
+			if(index == 1) {
+				
+				String userid = md.inputUserId();
+				//System.out.println("userid:"+userid);
+
+				Member member = md.findByUserid(userid);
+				
+				System.out.printf("ID : %s\n", member.getUserid());			
+				System.out.printf("Name : %s\n", member.getName());
+				System.out.printf("Account number : %s\n", member.getAccountNumber());
+				System.out.printf("Balance : %s\n", member.getBalance());
+			}
+			else {
+				System.out.println("No data.");
+			}
 		}
 	
 	//계좌 번호 랜덤 생성 000000-00-000000
 	public String createAccount() {
 		
-		String accountNumber = "";
-		
-		RandomNumber rn = new RandomNumber();
-		accountNumber = rn.randomNumber();
-		
-		return accountNumber;
+		while(true) {
+			
+			String accountNumber = "";
+			RandomNumber rn = new RandomNumber();
+			accountNumber = rn.randomNumber();
+			
+			int index = md.checkAccount(accountNumber);
+			
+			if(index == 1) {
+				return accountNumber;
+			}
+			
+		}
 	}
 	
 	//계좌 찾아서 입금
@@ -74,5 +89,29 @@ public class MemberService {
 		member = md.withdrawalAccount(member);
 		
 		System.out.printf("Total balance : %s\n", member.getBalance());
+	}
+	
+	//고객 정보 삭제
+	public void delete() {
+		
+		int index = md.checkList();
+		
+		if(index == 1) {
+			
+			String userid = md.inputUserId();
+			Member member = md.findByUserid(userid);
+			boolean tf = md.deleteInfo(member);
+			
+			if(tf == true) {
+				System.out.println("Deleted.");
+			}
+			else {
+				System.out.println("not deleted.");
+			}
+		}
+		else {
+			System.out.println("No data.");
+		}
+		
 	}
 }

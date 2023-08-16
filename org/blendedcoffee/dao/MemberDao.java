@@ -40,6 +40,9 @@ public class MemberDao {
 			if(member.getUserid().equals(userid) == true) {
 				return member;
 			}
+			else {
+				System.out.println("Without your account.");
+			}
 		}
 		
 		return null;
@@ -67,6 +70,18 @@ public class MemberDao {
 		
 	}
 	
+	//계좌 번호 중복 확인
+		public int checkAccount(String account) {
+				
+			for(int i = 0; i < memberList.size(); i++) {
+				Member member = memberList.get(i);
+				if(member.getAccountNumber().equals(account)) {
+					return 0;
+				}
+			}
+			return 1;
+	}
+	
 	//입금
 	public Member depositAccount(Member m) {
 		
@@ -85,29 +100,26 @@ public class MemberDao {
 	}
 	
 	//출금
-		public Member withdrawalAccount(Member m) {
+	public Member withdrawalAccount(Member m) {
+		
+		String money = Input.read("How much? : ");
 			
-			String money = Input.read("How much? : ");
+		int result = Integer.parseInt(m.getBalance());
+		int withdrawal = Integer.parseInt(money);
 			
-			int result = Integer.parseInt(m.getBalance());
-			int withdrawal = Integer.parseInt(money);
+		if(result < withdrawal) {
 			
-			if(result < withdrawal) {
+			System.out.println("Insufficient funds.");
 				
-				System.out.println("Insufficient funds.");
-				
-				return null;
-			}
-			
-				result -= withdrawal;
-				
-				money = Integer.toString(result);
-				
-				memberList.get(0).setBalance(money);
-				
-				return m;
+			return null;
 		}
-	
+			
+		result -= withdrawal;
+		money = Integer.toString(result);
+		memberList.get(0).setBalance(money);
+				
+		return m;
+	}	
 	
 	//고객 정보 변경 (userid를 기준으로 찾아서 변경)
 	public Member updateInfo(Member info) {
@@ -121,9 +133,40 @@ public class MemberDao {
 		return null;
 	}
 	
-	//고객 정보 삭제
-	public Member deleteInfo(Member info) {
+	//리스트에 정보가 있는 지 확인
+	public int checkList() {
 		
-		return null;
+		if(memberList.size() == 0) {
+			return 0;
+		}
+		else {
+			return 1;
+		}
+	}
+	
+	//고객 정보 삭제
+	public boolean deleteInfo(Member info) {
+		
+		System.out.println("Check the account to delete.");
+		System.out.printf("Id : %s\n", info.getUserid());
+		System.out.printf("Name : %s\n", info.getName());
+		System.out.printf("Account number : %s\n", info.getAccountNumber());
+		
+		while(true) {
+			
+			String yesNo = Input.read("Continue? y/n : ");
+			
+			if(yesNo.equalsIgnoreCase("y")) {
+				
+				return memberList.remove(info);
+			}
+			else if(yesNo.equalsIgnoreCase("n")) {
+				System.out.println("Canceled.");
+				return false;
+			}
+			else {
+				System.out.println("Please enter the y/n.");
+			}
+		}
 	}
 }
