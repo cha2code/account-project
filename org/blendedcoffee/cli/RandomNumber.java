@@ -26,7 +26,7 @@ public class RandomNumber {
 			return accountNumber;
 		}
 		
-		//문자열 사이에 문자 삽입
+		//계좌 번호 사이에 "-" 삽입
 		public String insertString(String accountNumber) {
 			
 			StringBuffer sb = new StringBuffer(accountNumber); //문자열을 StringBuffer로 변경

@@ -1,10 +1,13 @@
 package org.blendedcoffee.dao;
 
-import lombok.Getter;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.blendedcoffee.cli.Input;
+import org.blendedcoffee.cli.RandomNumber;
 import org.blendedcoffee.vo.Member;
+
+import lombok.Getter;
 
 public class MemberDao {
 
@@ -21,13 +24,36 @@ public class MemberDao {
 		memberList.add(info);
 	}
 	
+	//리스트에 정보가 있는 지 확인
+		public int checkList() {
+			
+			if(memberList.size() == 0) {
+				return 0;
+			}
+			else {
+				return 1;
+			}
+		}
+	
 	//userid 입력
 	public String inputUserId() {
 					
-			String userid = Input.read("ID : ");
+		String userid = Input.read("ID : ");
 			
-			return userid;
+		return userid;
 				
+	}
+	
+	//ID 중복 찾기
+	public boolean checkId(String userid) {
+		
+		for(int i = 0; i < memberList.size(); i++ ) {
+			if(userid.equals(memberList.get(i).getUserid())) {
+				return false;
+			}
+		}
+		
+		return true;
 	}
 	
 	//ID를 기준으로 고객 정보 찾기
@@ -40,35 +66,30 @@ public class MemberDao {
 			if(member.getUserid().equals(userid) == true) {
 				return member;
 			}
-			else {
-				System.out.println("Without your account.");
-			}
 		}
+		System.out.println("Without your account.");
 		
 		return null;
 		
-		/*
-		int max_index = 0;
-		int uid_pos = 0;
-
-		Member array_output = new Member();
-		
-		max_index = memberList.size();
-		
-		System.out.println("max_index:"+max_index);
-		
-		for(int array_idx = 0; array_idx < max_index; array_idx++) {
-			array_output = memberList.get(array_idx);
-			if(array_output.getUserid().equals(userid) == true) {
-				uid_pos = array_idx;
-				break;
+	}
+	
+	//계좌 번호 랜덤 생성 000000-00-000000
+		public String createAccount() {
+			
+			while(true) {
+				
+				String accountNumber = "";
+				RandomNumber rn = new RandomNumber();
+				accountNumber = rn.randomNumber();
+				
+				int index = checkAccount(accountNumber);
+				
+				if(index == 1) {
+					return accountNumber;
+				}
+				
 			}
 		}
-		array_output = memberList.get(uid_pos);
-		return array_output;
-		*/
-		
-	}
 	
 	//계좌 번호 중복 확인
 		public int checkAccount(String account) {
@@ -85,62 +106,64 @@ public class MemberDao {
 	//입금
 	public Member depositAccount(Member m) {
 		
-		String money = Input.read("How much? : ");
-		
-		int result = Integer.parseInt(m.getBalance());
-		int deposit = Integer.parseInt(money);
-		
-		result += deposit;
-		
-		money = Integer.toString(result);
-		
-		memberList.get(0).setBalance(money);
-		
-		return m;
+		while(true) {
+			
+			String money = Input.read("How much? : ");
+			
+			//입력 받은 값이 숫자인 지 판단 후 계산
+			try {
+				Integer.parseInt(money);
+				
+				int result = Integer.parseInt(m.getBalance()); //member에 저장 된 잔액을 int형으로 변환
+				int deposit = Integer.parseInt(money); //money에 저장 된 입금액을 int형으로 변환
+				
+				result += deposit;
+				
+				money = Integer.toString(result); //잔액+입금액한 결과를 String으로 변환
+				
+				
+				
+				m.setBalance(money); //리스트에 잔액 저장
+				
+				return m;
+
+			} catch (NumberFormatException e) {
+				System.out.println("Please enter the number.");
+			}
+			
+		}
 	}
 	
 	//출금
 	public Member withdrawalAccount(Member m) {
 		
-		String money = Input.read("How much? : ");
+		while(true) {
 			
-		int result = Integer.parseInt(m.getBalance());
-		int withdrawal = Integer.parseInt(money);
+			String money = Input.read("How much? : ");
 			
-		if(result < withdrawal) {
-			
-			System.out.println("Insufficient funds.");
+			//입력 받은 값이 숫자인 지 판단 후 계산
+			try {
+				Integer.parseInt(money);
 				
-			return null;
-		}
-			
-		result -= withdrawal;
-		money = Integer.toString(result);
-		memberList.get(0).setBalance(money);
+				int result = Integer.parseInt(m.getBalance()); //member에 저장 된 잔액을 int형으로 변환
+				int withdrawal = Integer.parseInt(money); //money에 저장 된 출금액을 int형으로 변환
 				
-		return m;
-	}	
-	
-	//고객 정보 변경 (userid를 기준으로 찾아서 변경)
-	public Member updateInfo(Member info) {
-		
-		for(int i = 0;  i <= memberList.size(); i++) {
-			if(info.getUserid().equals(memberList.get(i).getUserid())) {
-				memberList.get(i).getBalance();
+				if(result < withdrawal) { //잔액 < 출금액
+					return null;
+				}
+				
+				result -= withdrawal;
+				
+				money = Integer.toString(result); //잔액+입금액한 결과를 String으로 변환
+				
+				m.setBalance(money); //리스트에 잔액 저장
+				
+				return m;
+
+			} catch (NumberFormatException e) {
+				System.out.println("Please enter the number.");
 			}
-		}
-		
-		return null;
-	}
-	
-	//리스트에 정보가 있는 지 확인
-	public int checkList() {
-		
-		if(memberList.size() == 0) {
-			return 0;
-		}
-		else {
-			return 1;
+			
 		}
 	}
 	
@@ -169,4 +192,17 @@ public class MemberDao {
 			}
 		}
 	}
+	
+	/*
+	//고객 정보 변경 (userid를 기준으로 찾아서 변경)
+	public Member updateInfo(Member info) {
+		
+		for(int i = 0;  i <= memberList.size(); i++) {
+			if(info.getUserid().equals(memberList.get(i).getUserid())) {
+				memberList.get(i).getBalance();
+			}
+		}
+		
+		return null;
+	} */
 }

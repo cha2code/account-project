@@ -16,56 +16,52 @@ public class MemberService {
 	//가입 시 정보 입력 받은 후 리스트 생성
 	public Member inputMember() {
 		
-		String userid = md.inputUserId();
-		String password = Input.read("Password : ");
-		String name = Input.read("Name : ");
-		String accountNumber = createAccount();
-		String balance = "0";
-		
-		Member member = new Member(userid, password, name, accountNumber, balance);
-		
-		return member;
+		while(true) {
+			
+			String userid = md.inputUserId();
+			
+			boolean tf = md.checkId(userid); 
+			
+			if(tf == true) {
+				
+				String password = Input.read("Password : ");
+				String name = Input.read("Name : ");
+				String accountNumber = md.createAccount();
+				String balance = "0";
+				
+				Member member = new Member(userid, password, name, accountNumber, balance);
+				
+				return member;
+			}
+			
+			System.out.println("Duplicate ID.");
+		}
 	}
 	
 	//리스트에 저장 된 고객 정보 출력
 		public void printMember() {
-			
-			int index = md.checkList();
-			
-			if(index == 1) {
 				
-				String userid = md.inputUserId();
-				//System.out.println("userid:"+userid);
+				int index = md.checkList();
+				
+				if(index == 1) {
+					
+					String userid = md.inputUserId();
 
-				Member member = md.findByUserid(userid);
-				
-				System.out.printf("ID : %s\n", member.getUserid());			
-				System.out.printf("Name : %s\n", member.getName());
-				System.out.printf("Account number : %s\n", member.getAccountNumber());
-				System.out.printf("Balance : %s\n", member.getBalance());
-			}
-			else {
-				System.out.println("No data.");
-			}
+					Member member = md.findByUserid(userid);
+					
+					if(member != null) {
+						
+						System.out.printf("ID : %s\n", member.getUserid());			
+						System.out.printf("Name : %s\n", member.getName());
+						System.out.printf("Account number : %s\n", member.getAccountNumber());
+						System.out.printf("Balance : %s\n", member.getBalance());
+					}				
+					
+				}
+				else {
+					System.out.println("No data.");
+				}			
 		}
-	
-	//계좌 번호 랜덤 생성 000000-00-000000
-	public String createAccount() {
-		
-		while(true) {
-			
-			String accountNumber = "";
-			RandomNumber rn = new RandomNumber();
-			accountNumber = rn.randomNumber();
-			
-			int index = md.checkAccount(accountNumber);
-			
-			if(index == 1) {
-				return accountNumber;
-			}
-			
-		}
-	}
 	
 	//계좌 찾아서 입금
 	public void deposit() {
@@ -74,9 +70,13 @@ public class MemberService {
 		
 		Member member = md.findByUserid(userid);
 		
-		member = md.depositAccount(member);
-		
-		System.out.printf("Total blance : %s\n", member.getBalance());
+		if(member != null) {
+			member = md.depositAccount(member);
+			System.out.printf("Total blance : %s\n", member.getBalance());
+		}
+		else {
+			System.out.println("No data.");
+		}
 	}
 	
 	//계좌 찾아서 출금
@@ -85,10 +85,16 @@ public class MemberService {
 		String userid = md.inputUserId();
 		
 		Member member = md.findByUserid(userid);
-		
+			
 		member = md.withdrawalAccount(member);
 		
+		if(member != null) {
 		System.out.printf("Total balance : %s\n", member.getBalance());
+		}
+		else {
+			System.out.println("Insufficient funds.");
+		}
+
 	}
 	
 	//고객 정보 삭제
@@ -96,22 +102,28 @@ public class MemberService {
 		
 		int index = md.checkList();
 		
+		//리스트에 정보가 하나라도 있을 때 실행
 		if(index == 1) {
 			
 			String userid = md.inputUserId();
 			Member member = md.findByUserid(userid);
-			boolean tf = md.deleteInfo(member);
 			
-			if(tf == true) {
-				System.out.println("Deleted.");
-			}
-			else {
-				System.out.println("not deleted.");
+			if(member != null) {
+				
+				boolean tf = md.deleteInfo(member);
+				
+				if(tf == true) {
+					System.out.println("Deleted.");
+				}
+				else {
+					System.out.println("not deleted.");
+				}
 			}
 		}
+		
+		//리스트에 정보가 하나도 없을 때 실행
 		else {
 			System.out.println("No data.");
 		}
-		
 	}
 }

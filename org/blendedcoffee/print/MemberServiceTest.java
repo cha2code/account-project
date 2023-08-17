@@ -17,7 +17,7 @@ public class MemberServiceTest {
 		
 		while(true) {
 			
-			System.out.println("---------------------- Select the menu ----------------------");		
+			System.out.println("----------------------------- Select the menu -----------------------------");		
 			String select = Input.read("1.Join  2.Check your account  3.Deposit  4.Withdrawal  5.Delete your account  6.Exit : ");
 			
 			switch(select) {
