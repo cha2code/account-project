@@ -5,7 +5,7 @@ import org.blendedcoffee.vo.Member;
 
 public class MemberService {
 	
-	private static MemberDao md = new MemberDao();
+private static MemberDao md = new MemberDao();
 	
 	public void joinMember() {
 		
@@ -95,6 +95,49 @@ public class MemberService {
 			System.out.println("Insufficient funds.");
 		}
 
+	}
+	
+	//고객 정보 업데이트 - 이름, 비밀번호 (ID, 계좌 번호는 고정)
+	public void update() {
+		
+		while(true) {
+			
+			System.out.println("----- Update menu -----");		
+			String menu = Input.read("1.Name  2.Password  3.Return the menu");
+			
+			String userid;
+			Member m;
+			
+			switch(menu) {
+			
+			case "1" :
+				userid = Input.read("Enter your ID : "); //바꾸려는 계정 리스트에서 찾기
+				m = md.findByUserid(userid);
+				
+				String changeName = Input.read("Name : "); //바꿀 이름을 입력받음
+				md.updateName(m, changeName); //바꾸려는 계정과 바꿀 이름 업데이트
+				
+				System.out.println("Change the name is successful!");
+				break;
+				
+			case "2" :
+				userid = Input.read("Enter your ID : "); //바꾸려는 계정 리스트에서 찾기
+				m = md.findByUserid(userid);
+				
+				String changePassword = Input.read("Password : "); //바꿀 비밀번호를 입력받음
+				md.updatePassword(m, changePassword); //바꾸려는 계정과 바꿀 비밀번호 업데이트
+				
+				System.out.println("Change the password is successful!");
+				break;
+				
+			case "3" :
+				return;
+				
+			default : 
+				System.out.println("Please enter the number.");
+				break;
+			}
+		}
 	}
 	
 	//고객 정보 삭제

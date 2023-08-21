@@ -193,16 +193,15 @@ public class MemberDao {
 		}
 	}
 	
-	/*
-	//고객 정보 변경 (userid를 기준으로 찾아서 변경)
-	public Member updateInfo(Member info) {
+	//고객 이름 변경
+	public void updateName(Member m, String name) {
 		
-		for(int i = 0;  i <= memberList.size(); i++) {
-			if(info.getUserid().equals(memberList.get(i).getUserid())) {
-				memberList.get(i).getBalance();
-			}
-		}
+		m.setName(name);
+	} 
+	
+	//고객 비밀번호 변경
+	public void updatePassword(Member m, String password) {
 		
-		return null;
-	} */
+		m.setPassword(password);
+	} 
 }
