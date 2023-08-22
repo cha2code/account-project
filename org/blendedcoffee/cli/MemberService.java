@@ -85,15 +85,18 @@ private static MemberDao md = new MemberDao();
 		String userid = md.inputUserId();
 		
 		Member member = md.findByUserid(userid);
-			
-		member = md.withdrawalAccount(member);
 		
 		if(member != null) {
-		System.out.printf("Total balance : %s\n", member.getBalance());
+			if(member.getBalance() != "0") {
+				member = md.withdrawalAccount(member);
+				System.out.printf("Total balance : %s\n", member.getBalance());
+			}
+			
+			else {
+				System.out.println("Your balance is 0.");
+			}
 		}
-		else {
-			System.out.println("Insufficient funds.");
-		}
+		
 
 	}
 	
@@ -114,20 +117,36 @@ private static MemberDao md = new MemberDao();
 				userid = Input.read("Enter your ID : "); //바꾸려는 계정 리스트에서 찾기
 				m = md.findByUserid(userid);
 				
-				String changeName = Input.read("Name : "); //바꿀 이름을 입력받음
-				md.updateName(m, changeName); //바꾸려는 계정과 바꿀 이름 업데이트
+				if(m != null) {
+					String changeName = Input.read("Name : "); //바꿀 이름을 입력받음
+					md.updateName(m, changeName); //바꾸려는 계정과 바꿀 이름 업데이트
+					
+					System.out.println("Change the name is successful!");
+				}
 				
-				System.out.println("Change the name is successful!");
 				break;
 				
 			case "2" :
 				userid = Input.read("Enter your ID : "); //바꾸려는 계정 리스트에서 찾기
 				m = md.findByUserid(userid);
 				
-				String changePassword = Input.read("Password : "); //바꿀 비밀번호를 입력받음
-				md.updatePassword(m, changePassword); //바꾸려는 계정과 바꿀 비밀번호 업데이트
-				
-				System.out.println("Change the password is successful!");
+				if(m != null) {
+					String pwd = Input.read("Current your password :");
+					boolean tf = md.matchPassword(pwd, m); //기존 비밀번호 확인
+					
+					if(tf == true) { 
+						
+						String changePassword = Input.read("Password : "); //바꿀 비밀번호를 입력받음
+						md.updatePassword(m, changePassword); //바꾸려는 계정과 바꿀 비밀번호 업데이트
+						
+						System.out.println("Change the password is successful!");
+					}
+					
+					else {
+						System.out.println("Disagreement.");
+					}
+				}
+
 				break;
 				
 			case "3" :
@@ -164,7 +183,7 @@ private static MemberDao md = new MemberDao();
 			}
 		}
 		
-		//리스트에 정보가 하나도 없을 때 실행
+		//리스트에 정보가 없을 때 실행
 		else {
 			System.out.println("No data.");
 		}

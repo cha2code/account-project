@@ -73,6 +73,17 @@ public class MemberDao {
 		
 	}
 	
+	//Password 맞는 지 확인
+	public boolean matchPassword(String pwd, Member m) {
+		
+		if(pwd.equals(m.getPassword())) {
+			return true;
+		}
+		else {
+			return false;
+		}
+	}
+	
 	//계좌 번호 랜덤 생성 000000-00-000000
 		public String createAccount() {
 			
