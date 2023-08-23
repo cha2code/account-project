@@ -3,8 +3,7 @@ package org.blendedcoffee.dao;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.blendedcoffee.cli.Input;
-import org.blendedcoffee.cli.RandomNumber;
+import org.blendedcoffee.common.cli.command.Input;
 import org.blendedcoffee.vo.Member;
 
 import lombok.Getter;
@@ -25,35 +24,25 @@ public class MemberDao {
 	}
 	
 	//리스트에 정보가 있는 지 확인
-		public int checkList() {
+	public int checkList() {
 			
-			if(memberList.size() == 0) {
-				return 0;
-			}
-			else {
-				return 1;
-			}
+		if(memberList.size() == 0) {
+			return 0;
 		}
-	
-	//userid 입력
-	public String inputUserId() {
-					
-		String userid = Input.read("ID : ");
 			
-		return userid;
-				
+		return 1;
 	}
 	
-	//ID 중복 찾기
-	public boolean checkId(String userid) {
+	//ID 중복 찾기 (같은 ID가 있으면 0, 없으면 1 리턴)
+	public int checkId(String userid) {
 		
 		for(int i = 0; i < memberList.size(); i++ ) {
-			if(userid.equals(memberList.get(i).getUserid())) {
-				return false;
+			if(memberList.get(i).getUserid().equals(userid) == true) {
+				System.out.println("Success");
+				return 0;
 			}
 		}
-		
-		return true;
+		return 1;
 	}
 	
 	//ID를 기준으로 고객 정보 찾기
@@ -61,35 +50,31 @@ public class MemberDao {
 		
 		Member member = new Member();
 		
-		for(int i = 0; i < memberList.size(); i++) {
+		for(int i = 0; i < memberList.size(); i++) {	
 			member = memberList.get(i);
+			
 			if(member.getUserid().equals(userid) == true) {
+				member = memberList.get(i);
 				return member;
 			}
 		}
+		
 		System.out.println("Without your account.");
 		
 		return null;
 		
 	}
 	
-	//계좌 번호 랜덤 생성 000000-00-000000
-		public String createAccount() {
-			
-			while(true) {
-				
-				String accountNumber = "";
-				RandomNumber rn = new RandomNumber();
-				accountNumber = rn.randomNumber();
-				
-				int index = checkAccount(accountNumber);
-				
-				if(index == 1) {
-					return accountNumber;
-				}
-				
-			}
+	//Password 맞는 지 확인
+	public boolean matchPassword(String pwd, Member m) {
+		
+		if(pwd.equals(m.getPassword())) {
+			return true;
 		}
+		else {
+			return false;
+		}
+	}
 	
 	//계좌 번호 중복 확인
 		public int checkAccount(String account) {

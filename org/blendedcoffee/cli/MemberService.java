@@ -7,77 +7,63 @@ public class MemberService {
 	
 private static MemberDao md = new MemberDao();
 	
-	public void joinMember() {
+	//입력 받은 사용자 데이터 리스트에 저장
+	public void joinMember(Member member) {
 		
-		Member member = inputMember();
 		md.addInfo(member);
 	}
 	
-	//가입 시 정보 입력 받은 후 리스트 생성
-	public Member inputMember() {
+	//리스트에 값이 있는 지 확인
+	public int checkData() {
+			
+		int index = md.checkList();
+			
+		return index;
+	}
 		
+	//user id 중복 확인
+	public int duplicationCheck(String userid) {
+		
+		int check = md.checkId(userid);
+			
+		return check;
+	}
+	
+	//계좌 번호 랜덤 생성 000000-00-000000
+	public String createAccount() {
+				
 		while(true) {
-			
-			String userid = md.inputUserId();
-			
-			boolean tf = md.checkId(userid); 
-			
-			if(tf == true) {
-				
-				String password = Input.read("Password : ");
-				String name = Input.read("Name : ");
-				String accountNumber = md.createAccount();
-				String balance = "0";
-				
-				Member member = new Member(userid, password, name, accountNumber, balance);
-				
-				return member;
+					
+			String accountNumber = "";
+			RandomNumber rn = new RandomNumber();
+			accountNumber = rn.randomNumber();
+					
+			int index = md.checkAccount(accountNumber);
+					
+			if(index == 1) {
+				return accountNumber;
 			}
 			
-			System.out.println("Duplicate ID.");
 		}
 	}
 	
-	//리스트에 저장 된 고객 정보 출력
-		public void printMember() {
-				
-				int index = md.checkList();
-				
-				if(index == 1) {
-					
-					String userid = md.inputUserId();
-
-					Member member = md.findByUserid(userid);
-					
-					if(member != null) {
-						
-						System.out.printf("ID : %s\n", member.getUserid());			
-						System.out.printf("Name : %s\n", member.getName());
-						System.out.printf("Account number : %s\n", member.getAccountNumber());
-						System.out.printf("Balance : %s\n", member.getBalance());
-					}				
-					
-				}
-				else {
-					System.out.println("No data.");
-				}			
-		}
-	
-	//계좌 찾아서 입금
-	public void deposit() {
-		
-		String userid = md.inputUserId();
+	//userid가 일치하는 사용자의 리스트 리턴
+	public Member findMember(String userid) {
 		
 		Member member = md.findByUserid(userid);
 		
-		if(member != null) {
-			member = md.depositAccount(member);
-			System.out.printf("Total blance : %s\n", member.getBalance());
-		}
-		else {
-			System.out.println("No data.");
-		}
+		return member;
 	}
+	
+	//계좌 입금
+	public Member deposit(Member member) {
+		
+		member = md.depositAccount(member);
+		
+		return member;
+	}
+
+/*	
 	
 	//계좌 찾아서 출금
 	public void withdrawal() {
@@ -85,15 +71,18 @@ private static MemberDao md = new MemberDao();
 		String userid = md.inputUserId();
 		
 		Member member = md.findByUserid(userid);
-			
-		member = md.withdrawalAccount(member);
 		
 		if(member != null) {
-		System.out.printf("Total balance : %s\n", member.getBalance());
+			if(member.getBalance() != "0") {
+				member = md.withdrawalAccount(member);
+				System.out.printf("Total balance : %s\n", member.getBalance());
+			}
+			
+			else {
+				System.out.println("Your balance is 0.");
+			}
 		}
-		else {
-			System.out.println("Insufficient funds.");
-		}
+		
 
 	}
 	
@@ -114,20 +103,36 @@ private static MemberDao md = new MemberDao();
 				userid = Input.read("Enter your ID : "); //바꾸려는 계정 리스트에서 찾기
 				m = md.findByUserid(userid);
 				
-				String changeName = Input.read("Name : "); //바꿀 이름을 입력받음
-				md.updateName(m, changeName); //바꾸려는 계정과 바꿀 이름 업데이트
+				if(m != null) {
+					String changeName = Input.read("Name : "); //바꿀 이름을 입력받음
+					md.updateName(m, changeName); //바꾸려는 계정과 바꿀 이름 업데이트
+					
+					System.out.println("Change the name is successful!");
+				}
 				
-				System.out.println("Change the name is successful!");
 				break;
 				
 			case "2" :
 				userid = Input.read("Enter your ID : "); //바꾸려는 계정 리스트에서 찾기
 				m = md.findByUserid(userid);
 				
-				String changePassword = Input.read("Password : "); //바꿀 비밀번호를 입력받음
-				md.updatePassword(m, changePassword); //바꾸려는 계정과 바꿀 비밀번호 업데이트
-				
-				System.out.println("Change the password is successful!");
+				if(m != null) {
+					String pwd = Input.read("Current your password :");
+					boolean tf = md.matchPassword(pwd, m); //기존 비밀번호 확인
+					
+					if(tf == true) { 
+						
+						String changePassword = Input.read("Password : "); //바꿀 비밀번호를 입력받음
+						md.updatePassword(m, changePassword); //바꾸려는 계정과 바꿀 비밀번호 업데이트
+						
+						System.out.println("Change the password is successful!");
+					}
+					
+					else {
+						System.out.println("Disagreement.");
+					}
+				}
+
 				break;
 				
 			case "3" :
@@ -164,9 +169,9 @@ private static MemberDao md = new MemberDao();
 			}
 		}
 		
-		//리스트에 정보가 하나도 없을 때 실행
+		//리스트에 정보가 없을 때 실행
 		else {
 			System.out.println("No data.");
 		}
-	}
+	}*/
 }
