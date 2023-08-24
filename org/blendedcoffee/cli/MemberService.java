@@ -1,5 +1,6 @@
 package org.blendedcoffee.cli;
 
+import org.blendedcoffee.common.cli.command.Input;
 import org.blendedcoffee.dao.MemberDao;
 import org.blendedcoffee.vo.Member;
 
@@ -8,7 +9,7 @@ public class MemberService {
 private static MemberDao md = new MemberDao();
 	
 	//입력 받은 사용자 데이터 리스트에 저장
-	public void joinMember(Member member) {
+	public void saveList(Member member) {
 		
 		md.addInfo(member);
 	}
@@ -62,116 +63,47 @@ private static MemberDao md = new MemberDao();
 		
 		return member;
 	}
-
-/*	
 	
-	//계좌 찾아서 출금
-	public void withdrawal() {
+	//계좌 출금
+	public Member withdrawal(Member member) {
 		
-		String userid = md.inputUserId();
+		member = md.withdrawalAccount(member);
 		
-		Member member = md.findByUserid(userid);
-		
-		if(member != null) {
-			if(member.getBalance() != "0") {
-				member = md.withdrawalAccount(member);
-				System.out.printf("Total balance : %s\n", member.getBalance());
-			}
-			
-			else {
-				System.out.println("Your balance is 0.");
-			}
-		}
-		
-
+		return member;
 	}
 	
-	//고객 정보 업데이트 - 이름, 비밀번호 (ID, 계좌 번호는 고정)
-	public void update() {
+	//비밀번호 확인
+	public boolean checkPassword(Member member, String pwd) {
+		
+		boolean tf = md.matchPassword(pwd, member);
+		
+		return tf ? true : false;
+	}
+	
+	//사용자 삭제
+	public boolean delete(Member member) {
 		
 		while(true) {
 			
-			System.out.println("----- Update menu -----");		
-			String menu = Input.read("1.Name  2.Password  3.Return the menu");
+			String yesNo = Input.read("Continue? y/n : ");
 			
-			String userid;
-			Member m;
-			
-			switch(menu) {
-			
-			case "1" :
-				userid = Input.read("Enter your ID : "); //바꾸려는 계정 리스트에서 찾기
-				m = md.findByUserid(userid);
-				
-				if(m != null) {
-					String changeName = Input.read("Name : "); //바꿀 이름을 입력받음
-					md.updateName(m, changeName); //바꾸려는 계정과 바꿀 이름 업데이트
-					
-					System.out.println("Change the name is successful!");
-				}
-				
-				break;
-				
-			case "2" :
-				userid = Input.read("Enter your ID : "); //바꾸려는 계정 리스트에서 찾기
-				m = md.findByUserid(userid);
-				
-				if(m != null) {
-					String pwd = Input.read("Current your password :");
-					boolean tf = md.matchPassword(pwd, m); //기존 비밀번호 확인
-					
-					if(tf == true) { 
-						
-						String changePassword = Input.read("Password : "); //바꿀 비밀번호를 입력받음
-						md.updatePassword(m, changePassword); //바꾸려는 계정과 바꿀 비밀번호 업데이트
-						
-						System.out.println("Change the password is successful!");
-					}
-					
-					else {
-						System.out.println("Disagreement.");
-					}
-				}
-
-				break;
-				
-			case "3" :
-				return;
-				
-			default : 
-				System.out.println("Please enter the number.");
-				break;
-			}
-		}
-	}
-	
-	//고객 정보 삭제
-	public void delete() {
-		
-		int index = md.checkList();
-		
-		//리스트에 정보가 하나라도 있을 때 실행
-		if(index == 1) {
-			
-			String userid = md.inputUserId();
-			Member member = md.findByUserid(userid);
-			
-			if(member != null) {
+			if(yesNo.equalsIgnoreCase("y")) {
 				
 				boolean tf = md.deleteInfo(member);
 				
 				if(tf == true) {
-					System.out.println("Deleted.");
+					return true;
 				}
-				else {
-					System.out.println("not deleted.");
-				}
+				return false;
+			}
+			else if(yesNo.equalsIgnoreCase("n")) {
+				System.out.println("Canceled.");
+				return false;
+			}
+			else {
+				System.out.println("Please enter the y/n.");
 			}
 		}
 		
-		//리스트에 정보가 없을 때 실행
-		else {
-			System.out.println("No data.");
-		}
-	}*/
+	}
 }

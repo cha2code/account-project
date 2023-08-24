@@ -26,7 +26,7 @@ public class JoinCommand implements Command {
 					
 				Member member = new Member(userid, password, name, accountNumber, balance);
 					
-				ms.joinMember(member); //리스트에 저장
+				ms.saveList(member); //리스트에 저장
 				
 				System.out.printf("Welcome %s!\n", userid);
 				break;

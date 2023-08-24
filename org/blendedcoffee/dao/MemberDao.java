@@ -3,6 +3,7 @@ package org.blendedcoffee.dao;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.blendedcoffee.cli.RandomNumber;
 import org.blendedcoffee.common.cli.command.Input;
 import org.blendedcoffee.vo.Member;
 
@@ -74,6 +75,29 @@ public class MemberDao {
 		else {
 			return false;
 		}
+	}
+	
+	//계좌 번호 랜덤 생성 000000-00-000000
+		public String createAccount() {
+			
+			while(true) {
+				
+				String accountNumber = "";
+				RandomNumber rn = new RandomNumber();
+				accountNumber = rn.randomNumber();
+				
+				int index = checkAccount(accountNumber);
+				
+				if(index == 1) {
+					return accountNumber;
+				}
+				
+				else {
+					return null;
+				
+			}
+		}
+		
 	}
 	
 	//계좌 번호 중복 확인
@@ -153,29 +177,18 @@ public class MemberDao {
 	}
 	
 	//고객 정보 삭제
-	public boolean deleteInfo(Member info) {
+	public boolean deleteInfo(Member member) {
 		
-		System.out.println("Check the account to delete.");
-		System.out.printf("Id : %s\n", info.getUserid());
-		System.out.printf("Name : %s\n", info.getName());
-		System.out.printf("Account number : %s\n", info.getAccountNumber());
-		
-		while(true) {
+		for(int i = 0; i < memberList.size(); i++) {
 			
-			String yesNo = Input.read("Continue? y/n : ");
-			
-			if(yesNo.equalsIgnoreCase("y")) {
+			if(member.getUserid().equals(memberList.get(i).getUserid()) == true) {
 				
-				return memberList.remove(info);
-			}
-			else if(yesNo.equalsIgnoreCase("n")) {
-				System.out.println("Canceled.");
-				return false;
-			}
-			else {
-				System.out.println("Please enter the y/n.");
+				memberList.remove(member);
+				
+				return true;
 			}
 		}
+		return false;
 	}
 	
 	//고객 이름 변경

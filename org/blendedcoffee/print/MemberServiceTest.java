@@ -1,8 +1,11 @@
 package org.blendedcoffee.print;
 
 import org.blendedcoffee.barista.command.AccountInfoCommand;
+import org.blendedcoffee.barista.command.DeleteCommand;
 import org.blendedcoffee.barista.command.DepositCommand;
 import org.blendedcoffee.barista.command.JoinCommand;
+import org.blendedcoffee.barista.command.UpdateCommand;
+import org.blendedcoffee.barista.command.WithdrawalCommand;
 import org.blendedcoffee.common.cli.command.Input;
 
 public class MemberServiceTest {	
@@ -10,6 +13,9 @@ public class MemberServiceTest {
 	private static JoinCommand join = new JoinCommand();
 	private static AccountInfoCommand ac = new AccountInfoCommand();
 	private static DepositCommand dc = new DepositCommand();
+	private static WithdrawalCommand wc = new WithdrawalCommand();
+	private static UpdateCommand uc = new UpdateCommand();
+	private static DeleteCommand del = new DeleteCommand();
 	
 	public static void main(String[] args) {
 		
@@ -40,16 +46,16 @@ public class MemberServiceTest {
 				break;
 				
 			case "4" : //출금
-				//withdrawalInfo();
+				withdrawalInfo();
 				break;
 				
 			case "5" : //정보 수정
-				//updateInfo();
+				updateInfo();
 				break;
 				
 				
 			case "6" ://계좌 삭제
-				//deleteInfo();
+				deleteInfo();
 				break;
 				
 			case "7" : //프로그램 종료
@@ -78,19 +84,19 @@ public class MemberServiceTest {
 	static void depositInfo() {
 		dc.execute();		
 	}
-	/*
+	
 	//case 4 : 출금
 	static void withdrawalInfo() {
-		ms.withdrawal();
+		wc.execute();
 	}
 	
 	//case 5: 정보 수정
 	static void updateInfo() {
-		ms.update();
+		uc.execute();
 	}
-	
+
 	//case 6 : 계좌 삭제
 	static void deleteInfo() {
-		ms.delete();
-	}*/
+		del.execute();
+	}
 }
